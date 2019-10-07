@@ -5,19 +5,18 @@ Vue.use(BootstrapVue)
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import store from './store';
+import Myside from './components/Myside'
+import MediaLibrary from './components/MediaLibrary'
+
 
 Vue.config.productionTip = false
-
-
-// new Vue({
-//   render: h => h(App),
-//   store
-// }).$mount('#app')
 
 const app = new Vue({
   el: '#app',
   store,
   components:{
+      MediaLibrary,
       App,
+      Myside,
   }
 });

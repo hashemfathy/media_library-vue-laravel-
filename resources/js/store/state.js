@@ -1,5 +1,5 @@
 export default {
     images:[],
-    image:null
+    image:null,
 }
 

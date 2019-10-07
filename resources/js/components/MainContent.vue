@@ -1,7 +1,7 @@
 <template>
   <div class="container content">
     <div class="row">
-      <div class="col-9 files-list p-4 bg-dark">
+      <div class="col-9 files-list p-4 bg-light">
         <files-list></files-list>
       </div>
       <div class="col-3 file-content">
