@@ -2,10 +2,8 @@ import axios from 'axios'
 
 export default {
     'images' : {
-        'all' : (page = 1) => axios.get('/api/images',{
-            params:{
-                page
-            }
+        'all' : queryParams => axios.get('/api/images',{
+            params:queryParams
         }),
         'delete': (imageId) => axios.delete(
             `/api/delete-media/${imageId}`
