@@ -1,13 +1,9 @@
 <template>
-  <div>
-    <b-container>
-      <b-row >
-        <b-col class="mb-2" cols="3" v-for="image in images" :key="image.id" @click="showImage(image)">
-          <b-img  thumbnail fluid :src="image.url" class="card-img" alt="..."></b-img>
-        </b-col>
-      </b-row>
-    </b-container>
-  </div>
+  <b-row class="scrolled">
+    <b-col class="mb-2" cols="3" v-for="image in images" :key="image.id" @click="showImage(image)">
+      <b-img thumbnail fluid :src="image.url" class="card-img" alt="..."></b-img>
+    </b-col>
+  </b-row>
 </template>
 <script>
 import axios from "axios";
@@ -34,3 +30,9 @@ export default {
   }
 };
 </script>
+<style scoped>
+.scrolled {
+  max-height: 110vh;
+  overflow-y: scroll;
+}
+</style>

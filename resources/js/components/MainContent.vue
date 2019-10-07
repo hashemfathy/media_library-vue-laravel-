@@ -25,7 +25,6 @@ export default {
 <style  scoped>
 .content {
   width: 100%;
-  height: 100vh;
   background-color: #f1f1f1;
   margin-top: 10px;
   border: 2px solid #ddd;
@@ -33,9 +32,9 @@ export default {
 .file-content {
   min-height: 100px;
   border-left: 1px solid #ddd;
-  background-color: rgb(175, 169, 169);
+  background-color: #fff;
 }
 .files-list {
-  min-height: 100px;
-  border-left: 1px solid #ddd;}
+  border-left: 1px solid #ddd;
+}
 </style>
