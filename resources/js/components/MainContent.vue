@@ -33,6 +33,7 @@ export default {
   min-height: 100px;
   border-left: 1px solid #ddd;
   background-color: #fff;
+  padding: 0;
 }
 .files-list {
   border-left: 1px solid #ddd;

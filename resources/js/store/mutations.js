@@ -1,5 +1,9 @@
-export const getImages = (state,{images}) => {      
-  state.images = images
+export const getImages = (state,{images, meta}) => {
+  state.images = state.images.concat(images)
+  state.meta = meta
+}
+export const updateMeta = (state,{meta}) => {      
+  state.meta = meta
 }
 
 export const showImage = (state,{image}) => {   

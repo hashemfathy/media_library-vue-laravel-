@@ -18,19 +18,19 @@ use Spatie\MediaLibrary\Models\Media;
 */
 
 Route::post('upload-media', function (Request $request) {
-        if ($media = DataMedia::find(1)) {
-            $media
-                ->addMedia($request->file)
-                ->withCustomProperties(['user' => User::find(1)])
-                ->toMediaCollection();
-        } else {
-            $media = new DataMedia;
-            $media->save();
-            $media
-                ->addMedia($request->file)
-                ->withCustomProperties(['user' => User::find(1)])
-                ->toMediaCollection();
-        }  
+    if ($media = DataMedia::find(1)) {
+        $media
+            ->addMedia($request->file)
+            ->withCustomProperties(['user' => User::find(1)])
+            ->toMediaCollection();
+    } else {
+        $media = new DataMedia;
+        $media->save();
+        $media
+            ->addMedia($request->file)
+            ->withCustomProperties(['user' => User::find(1)])
+            ->toMediaCollection();
+    }
     $media_data = [
         'url' => $media->getMedia()[count($media->getMedia()) - 1]->getFullUrl(),
         'data' => $media->getMedia()[count($media->getMedia()) - 1]
@@ -56,20 +56,20 @@ Route::put('update-media/{media}', function (Request $request, Media $media) {
     ];
     \Log::info($data);
     $media->custom_properties = $data;
-    if($data['information']['title']){
+    if ($data['information']['title']) {
         $media->name = $data['information']['title'];
         $media->save();
     }
     $media->update();
 
-    
+
     return response()->json([
-        'media' => new mediaResource( $media)
+        'media' => new mediaResource($media)
     ], 200);
 });
 
 Route::get('images', function (Request $request) {
-    $all_media =  Media::paginate(10);
+    $all_media =  Media::paginate(30);
     return mediaResource::collection($all_media);
 });
 Route::get('media-library', function (Request $request) {

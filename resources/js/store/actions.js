@@ -1,9 +1,16 @@
 import api from '../api/api.js'
 
-export const getImages = ({ commit },{page = 1}) => {
-    api.images.all(page).then((res) => {
-        commit('getImages',{images:res.data.data})
-     })
+export const getImages = async ({ commit },{queryParams}) => {
+    try {
+        const response = await api.images.all(queryParams)
+        commit('getImages',{
+            images:response.data.data,
+            meta:response.data.meta
+        })
+        return response;
+    } catch (error) {
+        console.log('getImages',error);
+    }
 };
 
 export const deleteImage = ({ commit },{imageId}) => {
