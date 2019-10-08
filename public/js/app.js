@@ -2016,9 +2016,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
-/* harmony import */ var vue_infinite_loading__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue-infinite-loading */ "./node_modules/vue-infinite-loading/dist/vue-infinite-loading.js");
-/* harmony import */ var vue_infinite_loading__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(vue_infinite_loading__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _assets_images_video_png__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../assets/images/video.png */ "./resources/assets/images/video.png");
+/* harmony import */ var _assets_images_video_png__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_assets_images_video_png__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var vue_infinite_loading__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vue-infinite-loading */ "./node_modules/vue-infinite-loading/dist/vue-infinite-loading.js");
+/* harmony import */ var vue_infinite_loading__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(vue_infinite_loading__WEBPACK_IMPORTED_MODULE_4__);
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -2086,14 +2088,68 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    InfiniteLoading: vue_infinite_loading__WEBPACK_IMPORTED_MODULE_3___default.a
+    InfiniteLoading: vue_infinite_loading__WEBPACK_IMPORTED_MODULE_4___default.a
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapGetters"])({
+  data: function data() {
+    return {
+      videoIcon: _assets_images_video_png__WEBPACK_IMPORTED_MODULE_2___default.a
+    };
+  },
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_3__["mapGetters"])({
     images: "images",
     showedImage: "showedImage",
     meta: "meta"
@@ -2104,11 +2160,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       };
     }
   }),
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])({
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_3__["mapActions"])({
     getImages: "getImages"
-  }), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapMutations"])({
+  }), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_3__["mapMutations"])({
     updateMeta: "updateMeta"
   }), {
+    imageType: function imageType(image) {
+      return image.data.mime_type.includes("image");
+    },
+    videoType: function videoType(image) {
+      return image.data.mime_type.includes("video");
+    },
     showImage: function showImage(image) {
       this.$store.commit("showImage", {
         image: image
@@ -2267,8 +2329,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
 
 
 
@@ -2292,9 +2352,37 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           imageId: this.image.data.id
         });
       }
+    },
+    forceFileDownload: function forceFileDownload(response) {
+      var url = window.URL.createObjectURL(new Blob([response.data]));
+      var link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", this.image.data.file_name); //or any other extension
+
+      document.body.appendChild(link);
+      link.click();
+    },
+    downloadWithVueResource: function downloadWithVueResource() {
+      var _this = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_1___default()({
+        method: "get",
+        url: this.image.url,
+        responseType: "arraybuffer"
+      }).then(function (response) {
+        _this.forceFileDownload(response);
+      })["catch"](function () {
+        return console.log("error occured");
+      });
     }
   }),
   computed: {
+    imageType: function imageType() {
+      return this.image.data.mime_type.includes("image");
+    },
+    videoType: function videoType() {
+      return this.image.data.mime_type.includes("video");
+    },
     image: function image() {
       return this.$store.getters.showedImage;
     },
@@ -30459,7 +30547,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n#app {\r\n  font-family: \"Avenir\", Helvetica, Arial, sans-serif;\r\n  -webkit-font-smoothing: antialiased;\r\n  -moz-osx-font-smoothing: grayscale;\r\n  text-align: center;\r\n  color: #2c3e50;\n}\r\n", ""]);
+exports.push([module.i, "\n#app {\n  font-family: \"Avenir\", Helvetica, Arial, sans-serif;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  text-align: center;\n  color: #2c3e50;\n}\n", ""]);
 
 // exports
 
@@ -30478,7 +30566,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.content[data-v-305b4f65] {\r\n  width: 100%;\r\n  background-color: #f1f1f1;\r\n  margin-top: 10px;\r\n  border: 2px solid #ddd;\n}\n.file-content[data-v-305b4f65] {\r\n  min-height: 100px;\r\n  border-left: 1px solid #ddd;\r\n  background-color: #fff;\r\n  padding: 0;\n}\n.files-list[data-v-305b4f65] {\r\n  border-left: 1px solid #ddd;\n}\r\n", ""]);
+exports.push([module.i, "\n.content[data-v-305b4f65] {\n  width: 100%;\n  background-color: #f1f1f1;\n  margin-top: 10px;\n  border: 2px solid #ddd;\n}\n.file-content[data-v-305b4f65] {\n  min-height: 100px;\n  border-left: 1px solid #ddd;\n  background-color: #fff;\n  padding: 0;\n}\n.files-list[data-v-305b4f65] {\n  border-left: 1px solid #ddd;\n}\n", ""]);
 
 // exports
 
@@ -30497,7 +30585,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.scrolled[data-v-141dda4a] {\r\n  max-height: 110vh;\r\n  overflow-y: scroll;\n}\n.selected[data-v-141dda4a] {\r\n  position: absolute;\r\n  width: 30px;\r\n  height: 30px;\r\n  background-color: green;\r\n  top: 10px;\r\n  right: 0;\r\n  border: 3px solid #fff;\r\n  border-radius: 50%;\n}\r\n", ""]);
+exports.push([module.i, "\n.scrolled[data-v-141dda4a] {\n  max-height: 110vh;\n  overflow-y: scroll;\n}\n.selected[data-v-141dda4a] {\n  position: absolute;\n  width: 30px;\n  height: 30px;\n  background-color: green;\n  top: 10px;\n  right: 0;\n  border: 3px solid #fff;\n  border-radius: 50%;\n}\n", ""]);
 
 // exports
 
@@ -30516,7 +30604,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.card[data-v-3403fa14] {\r\n  border: 0;\n}\r\n", ""]);
+exports.push([module.i, "\n.card[data-v-3403fa14] {\n  border: 0;\n}\n", ""]);
 
 // exports
 
@@ -53133,15 +53221,31 @@ var render = function() {
                               ? _c("span", { staticClass: "selected" })
                               : _vm._e(),
                             _vm._v(" "),
-                            _c("b-img", {
-                              staticClass: "card-img",
-                              attrs: {
-                                thumbnail: "",
-                                fluid: "",
-                                src: image.url,
-                                alt: image.data.name
-                              }
-                            })
+                            _vm.imageType(image)
+                              ? _c("b-img", {
+                                  staticClass: "card-img",
+                                  attrs: {
+                                    thumbnail: "",
+                                    fluid: "",
+                                    src: image.url,
+                                    alt: image.data.name
+                                  }
+                                })
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _c("i", { staticClass: "fa fa-user" }),
+                            _vm._v(" "),
+                            _vm.videoType(image)
+                              ? _c("b-img", {
+                                  staticClass: "card-img",
+                                  attrs: {
+                                    thumbnail: "",
+                                    fluid: "",
+                                    src: _vm.videoIcon,
+                                    alt: image.data.name
+                                  }
+                                })
+                              : _vm._e()
                           ],
                           1
                         )
@@ -53203,7 +53307,7 @@ var render = function() {
                                 ]),
                                 _vm._v(" "),
                                 _c("b-th", [
-                                  _c("h6", [_c("b", [_vm._v("uploaded ")])])
+                                  _c("h6", [_c("b", [_vm._v("uploaded")])])
                                 ])
                               ],
                               1
@@ -53326,169 +53430,171 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _vm.image
-    ? _c(
-        "div",
-        { staticClass: "file" },
-        [
+    ? _c("div", { staticClass: "file" }, [
+        _c("div", { staticClass: "card", staticStyle: { width: "18rem" } }, [
+          _vm.imageType
+            ? _c("img", {
+                staticClass: "card-img-top",
+                attrs: { src: _vm.image.url, alt: _vm.image.data.name }
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.videoType
+            ? _c("video", { attrs: { width: "100%", controls: "" } }, [
+                _c("source", {
+                  attrs: { src: _vm.image.url, type: "video/mp4" }
+                }),
+                _vm._v(" "),
+                _c("source", {
+                  attrs: { src: _vm.image.url, type: "video/ogg" }
+                }),
+                _vm._v("Your browser does not support the video tag.\n    ")
+              ])
+            : _vm._e(),
+          _vm._v(" "),
           _c(
-            "b-card",
-            {
-              staticClass: "mb-2",
-              staticStyle: { "max-width": "20rem" },
-              attrs: {
-                title: _vm.image.data.name,
-                "img-src": _vm.image.url,
-                "img-alt": _vm.image.data.name,
-                "img-top": "",
-                tag: "article"
-              }
-            },
+            "div",
+            { staticClass: "card-body" },
             [
+              _c("h5", { staticClass: "card-title" }, [
+                _vm._v(_vm._s(_vm.image.data.name))
+              ]),
+              _vm._v(" "),
+              _c("p", [
+                _c("b", [_vm._v("Size:")]),
+                _vm._v(
+                  "\n        " +
+                    _vm._s(_vm.image.data.size / 1000) +
+                    "Kb\n      "
+                )
+              ]),
+              _vm._v(" "),
+              _c("p", [
+                _c("b", [_vm._v("uploaded at:")]),
+                _vm._v(
+                  "\n        " + _vm._s(_vm.image.data.created_at) + "\n      "
+                )
+              ]),
+              _vm._v(" "),
+              _vm.image.data.custom_properties.user
+                ? _c("p", [
+                    _c("b", [_vm._v("uploaded by:")]),
+                    _vm._v(
+                      "\n        " +
+                        _vm._s(_vm.image.data.custom_properties.user.name) +
+                        "\n      "
+                    )
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _c("p", [
+                _c("b", [_vm._v("type:")]),
+                _vm._v(
+                  "\n        " + _vm._s(_vm.image.data.mime_type) + "\n      "
+                )
+              ]),
+              _vm._v(" "),
+              _c("p", [
+                _c("b", [_vm._v("Url:")]),
+                _vm._v("\n        " + _vm._s(_vm.image.url) + "\n      ")
+              ]),
+              _vm._v(" "),
               _c(
-                "b-card-text",
+                "b-form",
                 [
-                  _c("p", [
-                    _c("b", [_vm._v("Size:")]),
-                    _vm._v(
-                      "\n        " +
-                        _vm._s(_vm.image.data.size / 1000) +
-                        "Kb\n      "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("p", [
-                    _c("b", [_vm._v("uploaded at:")]),
-                    _vm._v(
-                      "\n        " +
-                        _vm._s(_vm.image.data.created_at) +
-                        "\n      "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _vm.image.data.custom_properties.user
-                    ? _c("p", [
-                        _c("b", [_vm._v("uploaded by:")]),
-                        _vm._v(
-                          "\n        " +
-                            _vm._s(_vm.image.data.custom_properties.user.name) +
-                            "\n      "
-                        )
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _c("p", [
-                    _c("b", [_vm._v("type:")]),
-                    _vm._v(
-                      "\n        " +
-                        _vm._s(_vm.image.data.mime_type) +
-                        "\n      "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("p", [
-                    _c("b", [_vm._v("Url:")]),
-                    _vm._v("\n        " + _vm._s(_vm.image.url) + "\n      ")
-                  ]),
+                  _c(
+                    "b-form-group",
+                    {
+                      attrs: {
+                        id: "input-group-1",
+                        label: "title",
+                        "label-for": "input-1"
+                      }
+                    },
+                    [
+                      _c("b-form-input", {
+                        attrs: {
+                          id: "input-1",
+                          type: "text",
+                          name: "title",
+                          placeholder: _vm.image.data.name
+                        },
+                        model: {
+                          value: _vm.form.title,
+                          callback: function($$v) {
+                            _vm.$set(_vm.form, "title", $$v)
+                          },
+                          expression: "form.title"
+                        }
+                      })
+                    ],
+                    1
+                  ),
                   _vm._v(" "),
                   _c(
-                    "b-form",
+                    "b-form-group",
+                    {
+                      attrs: {
+                        id: "input-group-2",
+                        label: "description",
+                        "label-for": "input-2"
+                      }
+                    },
                     [
-                      _c(
-                        "b-form-group",
-                        {
-                          attrs: {
-                            id: "input-group-1",
-                            label: "title",
-                            "label-for": "input-1"
-                          }
+                      _c("b-form-textarea", {
+                        attrs: {
+                          id: "textarea",
+                          placeholder: _vm.image.data.custom_properties
+                            .information
+                            ? _vm.image.data.custom_properties.information
+                                .description
+                            : null,
+                          rows: "3",
+                          name: "description",
+                          "max-rows": "6"
                         },
-                        [
-                          _c("b-form-input", {
-                            attrs: {
-                              id: "input-1",
-                              type: "text",
-                              name: "title",
-                              placeholder: _vm.image.data.name
-                            },
-                            model: {
-                              value: _vm.form.title,
-                              callback: function($$v) {
-                                _vm.$set(_vm.form, "title", $$v)
-                              },
-                              expression: "form.title"
-                            }
-                          })
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "b-form-group",
-                        {
-                          attrs: {
-                            id: "input-group-2",
-                            label: "description",
-                            "label-for": "input-2"
-                          }
+                        model: {
+                          value: _vm.form.description,
+                          callback: function($$v) {
+                            _vm.$set(_vm.form, "description", $$v)
+                          },
+                          expression: "form.description"
+                        }
+                      })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "b-form-group",
+                    {
+                      attrs: {
+                        id: "input-group-3",
+                        label: "caption",
+                        "label-for": "input-3"
+                      }
+                    },
+                    [
+                      _c("b-form-textarea", {
+                        attrs: {
+                          id: "textarea",
+                          placeholder: _vm.image.data.custom_properties
+                            .information
+                            ? _vm.image.data.custom_properties.information
+                                .caption
+                            : null,
+                          rows: "3",
+                          name: "caption",
+                          "max-rows": "6"
                         },
-                        [
-                          _c("b-form-textarea", {
-                            attrs: {
-                              id: "textarea",
-                              placeholder: _vm.image.data.custom_properties
-                                .information
-                                ? _vm.image.data.custom_properties.information
-                                    .description
-                                : null,
-                              rows: "3",
-                              name: "description",
-                              "max-rows": "6"
-                            },
-                            model: {
-                              value: _vm.form.description,
-                              callback: function($$v) {
-                                _vm.$set(_vm.form, "description", $$v)
-                              },
-                              expression: "form.description"
-                            }
-                          })
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "b-form-group",
-                        {
-                          attrs: {
-                            id: "input-group-3",
-                            label: "caption",
-                            "label-for": "input-3"
-                          }
-                        },
-                        [
-                          _c("b-form-textarea", {
-                            attrs: {
-                              id: "textarea",
-                              placeholder: _vm.image.data.custom_properties
-                                .information
-                                ? _vm.image.data.custom_properties.information
-                                    .caption
-                                : null,
-                              rows: "3",
-                              name: "caption",
-                              "max-rows": "6"
-                            },
-                            model: {
-                              value: _vm.form.caption,
-                              callback: function($$v) {
-                                _vm.$set(_vm.form, "caption", $$v)
-                              },
-                              expression: "form.caption"
-                            }
-                          })
-                        ],
-                        1
-                      )
+                        model: {
+                          value: _vm.form.caption,
+                          callback: function($$v) {
+                            _vm.$set(_vm.form, "caption", $$v)
+                          },
+                          expression: "form.caption"
+                        }
+                      })
                     ],
                     1
                   )
@@ -53500,13 +53606,21 @@ var render = function() {
                 "b-button",
                 { attrs: { variant: "danger" }, on: { click: _vm.deleteImg } },
                 [_vm._v("Delete")]
+              ),
+              _vm._v(" "),
+              _c(
+                "b-button",
+                {
+                  attrs: { variant: "info" },
+                  on: { click: _vm.downloadWithVueResource }
+                },
+                [_vm._v("Download")]
               )
             ],
             1
           )
-        ],
-        1
-      )
+        ])
+      ])
     : _vm._e()
 }
 var staticRenderFns = []
@@ -66726,6 +66840,17 @@ module.exports = function(module) {
 
 /***/ }),
 
+/***/ "./resources/assets/images/video.png":
+/*!*******************************************!*\
+  !*** ./resources/assets/images/video.png ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/images/video.png?044b8504eee01e369f3d56dbefbf4fa0";
+
+/***/ }),
+
 /***/ "./resources/js/api/api.js":
 /*!*********************************!*\
   !*** ./resources/js/api/api.js ***!
@@ -67597,8 +67722,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\laragon\www\mediaLibrary\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\laragon\www\mediaLibrary\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /Users/ahmedmagdy/Desktop/work/develop/code/media_library-vue-laravel-/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /Users/ahmedmagdy/Desktop/work/develop/code/media_library-vue-laravel-/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

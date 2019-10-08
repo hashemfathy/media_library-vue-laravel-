@@ -20,4 +20,4 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('media-library',function () {
     return view('mediaLibrary');
-});
+})->name('media.library');

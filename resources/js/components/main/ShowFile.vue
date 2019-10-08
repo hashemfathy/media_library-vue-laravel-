@@ -1,15 +1,13 @@
 <template>
   <div class="file" v-if="image">
-    <b-card
-      :title="image.data.name"
-      :img-src="image.url"
-      :img-alt="image.data.name"
-      img-top
-      tag="article"
-      style="max-width: 20rem;"
-      class="mb-2"
-    >
-      <b-card-text>
+    <div class="card" style="width: 18rem;">
+      <img class="card-img-top" v-if="imageType" :src="image.url" :alt="image.data.name" />
+      <video width="100%" v-if="videoType" controls>
+        <source :src="image.url" type="video/mp4" />
+        <source :src="image.url" type="video/ogg" />Your browser does not support the video tag.
+      </video>
+      <div class="card-body">
+        <h5 class="card-title">{{image.data.name}}</h5>
         <p>
           <b>Size:</b>
           {{image.data.size/1000}}Kb
@@ -61,10 +59,10 @@
             ></b-form-textarea>
           </b-form-group>
         </b-form>
-      </b-card-text>
-
-      <b-button variant="danger" @click="deleteImg">Delete</b-button>
-    </b-card>
+        <b-button variant="danger" @click="deleteImg">Delete</b-button>
+        <b-button variant="info" @click="downloadWithVueResource">Download</b-button>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -92,9 +90,35 @@ export default {
           imageId: this.image.data.id
         });
       }
+    },
+    forceFileDownload(response) {
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", this.image.data.file_name); //or any other extension
+      document.body.appendChild(link);
+      link.click();
+    },
+
+    downloadWithVueResource() {
+      axios({
+        method: "get",
+        url: this.image.url,
+        responseType: "arraybuffer"
+      })
+        .then(response => {
+          this.forceFileDownload(response);
+        })
+        .catch(() => console.log("error occured"));
     }
   },
   computed: {
+    imageType() {
+      return this.image.data.mime_type.includes("image");
+    },
+    videoType() {
+      return this.image.data.mime_type.includes("video");
+    },
     image() {
       return this.$store.getters.showedImage;
     },

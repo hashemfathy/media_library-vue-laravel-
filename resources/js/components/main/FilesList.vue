@@ -14,7 +14,24 @@
                 @click="showImage(image)"
               >
                 <span class="selected" v-if="showedImage && image.data.id === showedImage.data.id"></span>
-                <b-img thumbnail fluid :src="image.url" class="card-img" :alt="image.data.name"></b-img>
+                <b-img
+                  thumbnail
+                  fluid
+                  v-if="imageType(image)"
+                  :src="image.url"
+                  class="card-img"
+                  :alt="image.data.name"
+                ></b-img>
+
+                <i class="fa fa-user"></i>
+                <b-img
+                  thumbnail
+                  fluid
+                  v-if="videoType(image)"
+                  :src="videoIcon"
+                  class="card-img"
+                  :alt="image.data.name"
+                ></b-img>
               </b-col>
             </b-row>
             <infinite-loading @infinite="infiniteHandler" spinner="waveDots" ref="infiniteLoading">
@@ -22,39 +39,72 @@
             </infinite-loading>
           </b-tab>
           <b-tab title="list">
-              <b-table-simple responsive>
-                <b-thead>
-                  <b-tr>
-                    <b-th sticky-column style="width:20%;"><h6><b>Media</b></h6></b-th>
-                    <b-th><h6><b>title</b></h6></b-th>
-                    <b-th><h6><b>size</b></h6></b-th>
-                    <b-th><h6><b>type</b></h6></b-th>
-                    <b-th><h6><b>uploaded </b></h6></b-th>
-                  </b-tr>
-                </b-thead>
-                <b-tbody>
-                  <b-tr v-for="image in images" :key="image.id" @click="showImage(image)" class="scrolled">
-                    <b-img sticky-column :src="image.url" :alt="image.data.name"></b-img>
-                    <b-th><h6>{{image.data.name}}</h6></b-th>
-                    <b-th><h6>{{image.data.size/1000}}Kb</h6></b-th>
-                    <b-th><h6>{{image.data.mime_type}}</h6></b-th>
-                    <b-th><h6>{{image.data.custom_properties.user?image.data.custom_properties.user.name:null}}</h6></b-th>
-                  </b-tr>
-                 
-                </b-tbody>
-              </b-table-simple>
-                <infinite-loading @infinite="infiniteHandler" spinner="waveDots" ref="infiniteLoading">
-                  <div slot="no-more"></div>
-                </infinite-loading>
+            <b-table-simple responsive>
+              <b-thead>
+                <b-tr>
+                  <b-th sticky-column style="width:20%;">
+                    <h6>
+                      <b>Media</b>
+                    </h6>
+                  </b-th>
+                  <b-th>
+                    <h6>
+                      <b>title</b>
+                    </h6>
+                  </b-th>
+                  <b-th>
+                    <h6>
+                      <b>size</b>
+                    </h6>
+                  </b-th>
+                  <b-th>
+                    <h6>
+                      <b>type</b>
+                    </h6>
+                  </b-th>
+                  <b-th>
+                    <h6>
+                      <b>uploaded</b>
+                    </h6>
+                  </b-th>
+                </b-tr>
+              </b-thead>
+              <b-tbody>
+                <b-tr
+                  v-for="image in images"
+                  :key="image.id"
+                  @click="showImage(image)"
+                  class="scrolled"
+                >
+                  <b-img sticky-column :src="image.url" :alt="image.data.name"></b-img>
+                  <b-th>
+                    <h6>{{image.data.name}}</h6>
+                  </b-th>
+                  <b-th>
+                    <h6>{{image.data.size/1000}}Kb</h6>
+                  </b-th>
+                  <b-th>
+                    <h6>{{image.data.mime_type}}</h6>
+                  </b-th>
+                  <b-th>
+                    <h6>{{image.data.custom_properties.user?image.data.custom_properties.user.name:null}}</h6>
+                  </b-th>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+            <infinite-loading @infinite="infiniteHandler" spinner="waveDots" ref="infiniteLoading">
+              <div slot="no-more"></div>
+            </infinite-loading>
           </b-tab>
         </b-tabs>
       </div>
     </b-container>
-    
   </div>
 </template>
 <script>
 import axios from "axios";
+import videoIcon from "../../../assets/images/video.png";
+
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import InfiniteLoading from "vue-infinite-loading";
 
@@ -62,7 +112,11 @@ export default {
   components: {
     InfiniteLoading
   },
-
+  data() {
+    return {
+      videoIcon: videoIcon
+    };
+  },
   computed: {
     ...mapGetters({
       images: "images",
@@ -82,6 +136,12 @@ export default {
     ...mapMutations({
       updateMeta: "updateMeta"
     }),
+    imageType(image) {
+      return image.data.mime_type.includes("image");
+    },
+    videoType(image) {
+      return image.data.mime_type.includes("video");
+    },
     showImage(image) {
       this.$store.commit("showImage", { image });
     },
