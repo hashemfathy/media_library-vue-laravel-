@@ -37,14 +37,14 @@ Route::post('upload-media', function (Request $request) {
     if ($media = DataMedia::find(1)) {
         $media
             ->addMedia($request->file)
-            ->withCustomProperties(['user' => request()->user()->id])
+            ->withCustomProperties(['user' => request()->user()])
             ->toMediaCollection();
     } else {
         $media = new DataMedia;
         $media->save();
         $media
             ->addMedia($request->file)
-            ->withCustomProperties(['user' => request()->user()->id])
+            ->withCustomProperties(['user' => request()->user()])
             ->toMediaCollection();
     }
     $media_data = [

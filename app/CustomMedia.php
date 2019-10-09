@@ -37,7 +37,7 @@ class CustomMedia extends BaseMedia
      */
     public function scopeFilterUploadedBy(Builder $query, $value = null)
     {
-        if ($value) $query->where("custom_properties->user", $value);
+        if ($value) $query->where("custom_properties->user->id", $value);
     }
 
     /**
