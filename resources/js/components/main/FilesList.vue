@@ -121,13 +121,9 @@ export default {
     ...mapGetters({
       images: "images",
       showedImage: "showedImage",
-      meta: "meta"
-    }),
-    queryParams() {
-      return {
-        page: this.meta.current_page
-      };
-    }
+      meta: "meta",
+      queryParams: "queryParams"
+    })
   },
   methods: {
     ...mapActions({
@@ -145,18 +141,14 @@ export default {
     showImage(image) {
       this.$store.commit("showImage", { image });
     },
-    async infiniteHandler($state) {
+    infiniteHandler($state) {
       if (this.meta.current_page <= this.meta.last_page) {
-        try {
-          const response = await this.getImages({
-            queryParams: this.queryParams
-          });
-          this.updateMeta({
-            meta: {
-              ...this.meta,
-              last_page: response.data.meta.last_page
-            }
-          });
+        this.getImages({
+          queryParams: {
+            page: this.meta.current_page,
+            ...this.queryParams
+          }
+        }).then(response => {
           $state.loaded();
           if (this.meta.current_page == response.data.meta.last_page) {
             $state.complete();
@@ -168,9 +160,28 @@ export default {
               }
             });
           }
-        } catch (error) {
-          console.log("error", error);
+        });
+      }
+    },
+    resetDataForInfiniteLoading() {
+      this.$store.state.images = [];
+      this.$store.state.image = null;
+      this.updateMeta({
+        meta: {
+          ...this.meta,
+          current_page: 1
         }
+      });
+      this.infiniteHandler(this.$refs.infiniteLoading.stateChanger);
+    }
+  },
+  watch: {
+    queryParams: {
+      deep: true,
+      handler(val) {
+        console.log("watch-queryParams");
+
+        this.resetDataForInfiniteLoading();
       }
     }
   }

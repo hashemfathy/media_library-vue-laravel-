@@ -32,3 +32,7 @@ export const updateShowedImage = (state,{imageId,newImage}) => {
     state.image = newImage
   }
 }
+
+export const updateQueryParams = (state,{query}) => { 
+  state.queryParams = query
+}
