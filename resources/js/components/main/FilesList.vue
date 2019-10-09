@@ -4,69 +4,153 @@
       <div>
         <b-tabs content-class="mt-3">
           <b-tab title="Grid" active @click="activeGrid()">
+            <div v-if="grid">
               <b-row class="scrolled">
                 <b-col
                   class="mb-2"
                   cols="3"
                   style="position:relative"
-                  v-for="image in images"
-                  :key="image.data.id"
+                  v-for="(image,index) in images"
+                  :key="index"
                   @click="showImage(image)"
                 >
-                  <span class="selected" v-if="showedImage && image.data.id === showedImage.data.id"></span>
-                  <b-img thumbnail fluid :src="image.url" class="card-img" :alt="image.data.name"></b-img>
-                  <input v-if="showChickbox==true" type="checkbox" class="checkbox" :value="image.data.id" v-model="selected" />
+                  <span
+                    class="selected"
+                    v-if="showedImage && image.data.id === showedImage.data.id"
+                  ></span>
+                  <b-img
+                    thumbnail
+                    v-if="imageType(image)"
+                    fluid
+                    :src="image.url"
+                    class="card-img"
+                    :alt="image.data.name"
+                  ></b-img>
+                  <b-img
+                    thumbnail
+                    v-if="videoType(image)"
+                    fluid
+                    :src="videoIcon"
+                    class="card-img"
+                    :alt="image.data.name"
+                  ></b-img>
+                  <input
+                    v-if="showChickbox==true"
+                    type="checkbox"
+                    class="checkbox"
+                    :value="image.data.id"
+                    v-model="selected"
+                  />
                 </b-col>
               </b-row>
-              <infinite-loading @infinite="infiniteHandler" spinner="waveDots" ref="infiniteLoading">
+              <infinite-loading
+                @infinite="infiniteHandler"
+                spinner="waveDots"
+                ref="infiniteLoading"
+              >
                 <div slot="no-more"></div>
               </infinite-loading>
+            </div>
           </b-tab>
           <b-tab title="list" @click="disableGrid()">
+            <div v-if="!grid">
               <b-table-simple responsive>
                 <b-thead>
                   <b-tr>
-                    <b-th><h6><b>select</b></h6></b-th>
-                    <b-th sticky-column style="width:20%;"><h6><b>Media</b></h6></b-th>
-                    <b-th><h6><b>title</b></h6></b-th>
-                    <b-th><h6><b>size</b></h6></b-th>
-                    <b-th><h6><b>type</b></h6></b-th>
-                    <b-th><h6><b>uploaded </b></h6></b-th>
+                    <b-th>
+                      <h6>
+                        <b>select</b>
+                      </h6>
+                    </b-th>
+                    <b-th sticky-column style="width:20%;">
+                      <h6>
+                        <b>Media</b>
+                      </h6>
+                    </b-th>
+                    <b-th>
+                      <h6>
+                        <b>title</b>
+                      </h6>
+                    </b-th>
+                    <b-th>
+                      <h6>
+                        <b>size</b>
+                      </h6>
+                    </b-th>
+                    <b-th>
+                      <h6>
+                        <b>type</b>
+                      </h6>
+                    </b-th>
+                    <b-th>
+                      <h6>
+                        <b>uploaded</b>
+                      </h6>
+                    </b-th>
                   </b-tr>
                 </b-thead>
                 <b-tbody>
-                  <b-tr v-for="image in images" :key="image.data.id" @click="showImage(image)" class="scrolled">
+                  <b-tr
+                    v-for="(image,index) in images"
+                    :key="index"
+                    @click="showImage(image)"
+                    class="scrolled"
+                  >
                     <b-th>
                       <label class="form-checkbox">
-                        <input type="checkbox" :value="image.data.id" v-model="selected">
+                        <input type="checkbox" :value="image.data.id" v-model="selected" />
                         <i class="form-icon"></i>
                       </label>
                     </b-th>
-                    <b-img sticky-column :src="image.url" :alt="image.data.name"></b-img>
-                    <b-th><h6>{{image.data.name}}</h6></b-th>
-                    <b-th><h6>{{image.data.size/1000}}Kb</h6></b-th>
-                    <b-th><h6>{{image.data.mime_type}}</h6></b-th>
-                    <b-th><h6>{{image.data.custom_properties.user?image.data.custom_properties.user.name:null}}</h6></b-th>
+                    <b-img
+                      sticky-column
+                      v-if="imageType(image)"
+                      :src="image.url"
+                      :alt="image.data.name"
+                    ></b-img>
+                    <b-img
+                      sticky-column
+                      v-if="videoType(image)"
+                      :src="videoIcon"
+                      :alt="image.data.name"
+                    ></b-img>
+                    <b-th>
+                      <h6>{{image.data.name}}</h6>
+                    </b-th>
+                    <b-th>
+                      <h6>{{image.data.size/1000}}Kb</h6>
+                    </b-th>
+                    <b-th>
+                      <h6>{{image.data.mime_type}}</h6>
+                    </b-th>
+                    <b-th>
+                      <h6>{{image.data.custom_properties.user?image.data.custom_properties.user.name:null}}</h6>
+                    </b-th>
                   </b-tr>
-                 
                 </b-tbody>
               </b-table-simple>
-              <infinite-loading @infinite="infiniteHandler" spinner="waveDots" ref="infiniteLoading">
+              <infinite-loading
+                @infinite="infiniteHandler"
+                spinner="waveDots"
+                ref="infiniteLoading"
+              >
                 <div slot="no-more"></div>
               </infinite-loading>
+            </div>
           </b-tab>
-           <template v-slot:tabs-end >
+          <template v-slot:tabs-end>
             <b-button v-if="selected[0]" variant="danger" @click="deleteImg()">Delete selected</b-button>
             <b-button v-if="grid==true" variant="primary" @click="showChickboxes()">Bulk select</b-button>
           </template>
         </b-tabs>
       </div>
     </b-container>
-    
   </div>
 </template>
 <script>
 import axios from "axios";
+import videoIcon from "../../../assets/images/video.png";
+
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import InfiniteLoading from "vue-infinite-loading";
 
@@ -74,49 +158,47 @@ export default {
   components: {
     InfiniteLoading
   },
-  data(){
-    return{
+  data() {
+    return {
       selected: [],
-      grid:true,
-      showChickbox:false
-    }
+      grid: true,
+      showChickbox: false,
+      videoIcon: videoIcon
+    };
   },
   computed: {
     ...mapGetters({
       images: "images",
       showedImage: "showedImage",
-      meta: "meta"
-    }),
-    queryParams() {
-      return {
-        page: this.meta.current_page
-      };
-    }
+      meta: "meta",
+      queryParams: "queryParams"
+    })
   },
   methods: {
     ...mapActions({
       getImages: "getImages",
-      deleteImage: "deleteImage",
-
+      deleteImage: "deleteImage"
     }),
     ...mapMutations({
       updateMeta: "updateMeta"
     }),
+    imageType(image) {
+      return image.data.mime_type.includes("image");
+    },
+    videoType(image) {
+      return image.data.mime_type.includes("video");
+    },
     showImage(image) {
       this.$store.commit("showImage", { image });
     },
-    async infiniteHandler($state) {
+    infiniteHandler($state) {
       if (this.meta.current_page <= this.meta.last_page) {
-        try {
-          const response = await this.getImages({
-            queryParams: this.queryParams
-          });
-          this.updateMeta({
-            meta: {
-              ...this.meta,
-              last_page: response.data.meta.last_page
-            }
-          });
+        this.getImages({
+          queryParams: {
+            page: this.meta.current_page,
+            ...this.queryParams
+          }
+        }).then(response => {
           $state.loaded();
           if (this.meta.current_page == response.data.meta.last_page) {
             $state.complete();
@@ -128,30 +210,53 @@ export default {
               }
             });
           }
-        } catch (error) {
-          console.log("error", error);
-        }
+        });
       }
     },
-    disableGrid(){
-      this.grid=false
+    resetDataForInfiniteLoading() {
+      this.$store.state.images = [];
+      this.$store.state.image = null;
+      this.updateMeta({
+        meta: {
+          ...this.meta,
+          current_page: 1
+        }
+      });
+      this.infiniteHandler(this.$refs.infiniteLoading.stateChanger);
     },
-    activeGrid(){
-      this.grid=true
+    disableGrid() {
+      this.grid = false;
+      this.$store.state.images = [];
     },
-    showChickboxes(){
-      this.showChickbox=!this.showChickbox
+    activeGrid() {
+      this.grid = true;
+      this.$store.state.images = [];
+    },
+    showChickboxes() {
+      console.log("asd");
+
+      this.showChickbox = !this.showChickbox;
     },
     async deleteImg() {
-      if (this.selected!=null) {
-        for(let image in this.selected){
+      if (this.selected != null) {
+        for (let image in this.selected) {
           // console.log(this.selected[image])
-            this.deleteImage({
-            imageId:this.selected[image]
+          this.deleteImage({
+            imageId: this.selected[image]
           });
         }
       }
-      this.selected=[];
+      this.selected = [];
+    }
+  },
+  watch: {
+    queryParams: {
+      deep: true,
+      handler(val) {
+        console.log("watch-queryParams");
+
+        this.resetDataForInfiniteLoading();
+      }
     }
   }
 };
@@ -171,10 +276,10 @@ export default {
   border: 3px solid #fff;
   border-radius: 50%;
 }
-.checkbox{
+.checkbox {
   position: absolute;
-    top: -3%;
-    left: 10%;
-    width: 17px;
+  top: -3%;
+  left: 10%;
+  width: 17px;
 }
 </style>

@@ -22,12 +22,17 @@ export default {
   components: {
     vueDropzone: vue2Dropzone
   },
+
   data: function() {
     return {
       dropzoneOptions: {
-        url: "/api/upload-media",
+        url: "/upload-media",
         thumbnailWidth: 200,
-        addRemoveLinks: true
+        addRemoveLinks: true,
+        headers: {
+          "X-CSRF-TOKEN": document.head.querySelector("[name=csrf-token]")
+            .content
+        }
       }
     };
   },

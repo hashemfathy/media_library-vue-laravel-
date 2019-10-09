@@ -1,21 +1,26 @@
 <template>
-  <div class="container content">
-    <div class="row">
-      <div class="col-9 files-list p-4 bg-light">
-        <files-list></files-list>
-      </div>
-      <div class="col-3 file-content">
-        <show-file></show-file>
+  <div>
+    <search></search>
+    <div class="container content">
+      <div class="row">
+        <div class="col-9 files-list p-4 bg-light">
+          <files-list></files-list>
+        </div>
+        <div class="col-3 file-content">
+          <show-file></show-file>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import Search from "./Search";
 import ShowFile from "./main/ShowFile";
 import FilesList from "./main/FilesList";
 export default {
   components: {
+    Search,
     ShowFile,
     FilesList
   }

@@ -1,7 +1,7 @@
 <template>
-  <div>
-      <upload-file></upload-file>
-      <main-content></main-content>
+  <div class="container">
+    <upload-file></upload-file>
+    <main-content></main-content>
   </div>
 </template>
 
