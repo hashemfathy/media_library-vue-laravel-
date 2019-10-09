@@ -62,7 +62,6 @@
           </b-form-group>
         </b-form>
       </b-card-text>
-
       <b-button variant="danger" @click="deleteImg">Delete</b-button>
     </b-card>
   </div>
@@ -104,13 +103,15 @@ export default {
   },
   watch: {
     image(newVal) {
-      this.form.title = newVal.data.name;
-      this.form.description = newVal.data.custom_properties.information
-        ? newVal.data.custom_properties.information.description
-        : null;
-      this.form.caption = newVal.data.custom_properties.information
-        ? newVal.data.custom_properties.information.caption
-        : null;
+      if(newVal){
+        this.form.title = newVal.data.name?newVal.data.name:null;
+        this.form.description = newVal.data.custom_properties.information
+          ? newVal.data.custom_properties.information.description
+          : null;
+        this.form.caption = newVal.data.custom_properties.information
+          ? newVal.data.custom_properties.information.caption
+          : null;
+      }
     },
     "form.title": _.debounce(function(newVal, oldVal) {
       this.updateShowedImage({
