@@ -1,8 +1,8 @@
 <template>
   <div>
     <b-container>
-      <div>
-        <b-tabs content-class="mt-3">
+      <div >
+        <b-tabs>
           <b-tab title="Grid" active @click="activeGrid()">
             <div v-if="grid">
               <b-row class="scrolled">
@@ -54,93 +54,94 @@
           </b-tab>
           <b-tab title="list" @click="disableGrid()">
             <div v-if="!grid">
-              <b-table-simple responsive>
-                <b-thead>
-                  <b-tr>
-                    <b-th>
-                      <h6>
-                        <b>select</b>
-                      </h6>
-                    </b-th>
-                    <b-th sticky-column style="width:20%;">
-                      <h6>
-                        <b>Media</b>
-                      </h6>
-                    </b-th>
-                    <b-th>
-                      <h6>
-                        <b>title</b>
-                      </h6>
-                    </b-th>
-                    <b-th>
-                      <h6>
-                        <b>size</b>
-                      </h6>
-                    </b-th>
-                    <b-th>
-                      <h6>
-                        <b>type</b>
-                      </h6>
-                    </b-th>
-                    <b-th>
-                      <h6>
-                        <b>uploaded</b>
-                      </h6>
-                    </b-th>
-                  </b-tr>
-                </b-thead>
-                <b-tbody>
-                  <b-tr
-                    v-for="(image,index) in images"
-                    :key="index"
-                    @click="showImage(image)"
-                    class="scrolled"
-                  >
-                    <b-th>
-                      <label class="form-checkbox">
-                        <input type="checkbox" :value="image.data.id" v-model="selected" />
-                        <i class="form-icon"></i>
-                      </label>
-                    </b-th>
-                    <b-img
-                      sticky-column
-                      v-if="imageType(image)"
-                      :src="image.url"
-                      :alt="image.data.name"
-                    ></b-img>
-                    <b-img
-                      sticky-column
-                      v-if="videoType(image)"
-                      :src="videoIcon"
-                      :alt="image.data.name"
-                    ></b-img>
-                    <b-th>
-                      <h6>{{image.data.name}}</h6>
-                    </b-th>
-                    <b-th>
-                      <h6>{{image.data.size/1000}}Kb</h6>
-                    </b-th>
-                    <b-th>
-                      <h6>{{image.data.mime_type}}</h6>
-                    </b-th>
-                    <b-th>
-                      <h6>{{image.data.custom_properties.user?image.data.custom_properties.user.name:null}}</h6>
-                    </b-th>
-                  </b-tr>
-                </b-tbody>
-              </b-table-simple>
-              <infinite-loading
-                @infinite="infiniteHandler"
-                spinner="waveDots"
-                ref="infiniteLoading"
-              >
-                <div slot="no-more"></div>
-              </infinite-loading>
+                <b-table-simple responsive>
+                  <b-thead>
+                    <b-tr>
+                      <b-th class="th">
+                        <h6>
+                          <b>select</b>
+                        </h6>
+                      </b-th>
+                      <b-th sticky-column class="th">
+                        <h6>
+                          <b>Media</b>
+                        </h6>
+                      </b-th>
+                      <b-th class="th">
+                        <h6>
+                          <b>title</b>
+                        </h6>
+                      </b-th>
+                      <b-th class="th">
+                        <h6>
+                          <b>size</b>
+                        </h6>
+                      </b-th>
+                      <b-th class="th">
+                        <h6>
+                          <b>type</b>
+                        </h6>
+                      </b-th>
+                      <b-th class="th">
+                        <h6>
+                          <b>uploaded by</b>
+                        </h6>
+                      </b-th>
+                    </b-tr>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr
+                      v-for="(image,index) in images"
+                      :key="index"
+                      @click="showImage(image)"
+                      class="scrolled"
+                    >
+                      <b-th>
+                        <label class="form-checkbox">
+                          <input type="checkbox" :value="image.data.id" v-model="selected" />
+                          <i class="form-icon"></i>
+                        </label>
+                      </b-th>
+                      <b-img
+                        sticky-column
+                        v-if="imageType(image)"
+                        :src="image.url"
+                        :alt="image.data.name"
+                        style="width:100%;margin:2px;"
+                      ></b-img>
+                      <b-img
+                        sticky-column
+                        v-if="videoType(image)"
+                        :src="videoIcon"
+                        :alt="image.data.name"
+                      ></b-img>
+                      <b-th>
+                        <h6>{{image.data.name}}</h6>
+                      </b-th>
+                      <b-th>
+                        <h6>{{image.data.size/1000}}Kb</h6>
+                      </b-th>
+                      <b-th>
+                        <h6>{{image.data.mime_type}}</h6>
+                      </b-th>
+                      <b-th>
+                        <h6>{{image.data.custom_properties.user?image.data.custom_properties.user.name:null}}</h6>
+                      </b-th>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+                <infinite-loading
+                  @infinite="infiniteHandler"
+                  spinner="waveDots"
+                  ref="infiniteLoading"
+                >
+                  <div slot="no-more"></div>
+                </infinite-loading>
             </div>
           </b-tab>
           <template v-slot:tabs-end>
-            <b-button v-if="selected[0]" variant="danger" @click="deleteImg()">Delete selected</b-button>
-            <b-button v-if="grid==true" variant="primary" @click="showChickboxes()">Bulk select</b-button>
+            <b-button  class="delete" v-if="selected[0]" variant="danger" @click="deleteImg()">Delete selected</b-button>
+            <b-button class="bulk" v-if="grid==true" variant="primary" @click="showChickboxes()">Bulk select</b-button>
           </template>
         </b-tabs>
       </div>
@@ -275,8 +276,25 @@ export default {
 }
 .checkbox {
   position: absolute;
-  top: -3%;
-  left: 10%;
-  width: 17px;
+    top: 7%;
+    left: 12%;
+    width: 16px;
+    transform: scale(1.5);
+}
+.th{
+width:160px;
+}
+h6{
+  text-align: center;
+}
+.bulk{
+   position: absolute;
+    right: 32px;
+    margin: 3px;
+}
+.delete{
+  position: absolute;
+    right: 140px;
+    margin: 3px;
 }
 </style>

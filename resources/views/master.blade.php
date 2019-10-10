@@ -6,7 +6,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <link rel="shortcut icon" href="{{ asset('img/favicon.png') }}">
+  <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
 
   <link href="{{ asset('css/app.css') }}" rel="stylesheet">
   <link href="{{URL::to('fonts/backend_fonts/css/font-awesome.css')}}" rel="stylesheet" />
