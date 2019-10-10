@@ -81,8 +81,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      deleteImage: "deleteImage",
-      updateShowedImage: "updateShowedImage"
+      deleteImage: "mediaLibrary/deleteImage",
+      updateShowedImage: "mediaLibrary/updateShowedImage"
     }),
     deleteImg() {
       if (this.image) {
@@ -113,14 +113,14 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      image: "mediaLibrary/showedImage"
+    }),
     imageType() {
       return this.image.data.mime_type.includes("image");
     },
     videoType() {
       return this.image.data.mime_type.includes("video");
-    },
-    image() {
-      return this.$store.getters.showedImage;
     },
     checkImageCustomProperties() {
       return this.image && this.image.data && this.image.data.custom_properties;

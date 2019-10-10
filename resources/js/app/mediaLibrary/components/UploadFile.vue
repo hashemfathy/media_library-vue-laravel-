@@ -15,10 +15,9 @@
 <script>
 import vue2Dropzone from "vue2-dropzone";
 import "vue2-dropzone/dist/vue2Dropzone.min.css";
-import axios from "axios";
-import { mapActions, mapGetters } from "vuex";
+import { mapMutations } from "vuex";
+
 export default {
-  name: "app",
   components: {
     vueDropzone: vue2Dropzone
   },
@@ -26,7 +25,7 @@ export default {
   data: function() {
     return {
       dropzoneOptions: {
-        url: "/upload-media",
+        url: "/media-library/upload-media",
         thumbnailWidth: 200,
         addRemoveLinks: true,
         headers: {
@@ -37,8 +36,12 @@ export default {
     };
   },
   methods: {
+    ...mapMutations({
+      uploadedImage: "mediaLibrary/uploadedImage"
+    }),
     handleAddNewImage(file, response) {
-      this.$store.commit("uploadedImage", { image: response });
+      this.uploadedImage({ image: response });
+      // this.$store.commit("uploadedImage", { image: response });
       setTimeout(() => {
         this.$refs.myVueDropzone.removeFile(file);
       }, 2000);

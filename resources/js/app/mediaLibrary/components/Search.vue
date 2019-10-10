@@ -58,7 +58,7 @@ export default {
   },
   methods: {
     ...mapMutations({
-      updateQueryParams: "updateQueryParams"
+      updateQueryParams: "mediaLibrary/updateQueryParams"
     })
   },
   watch: {

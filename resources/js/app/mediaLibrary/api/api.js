@@ -2,14 +2,14 @@ import axios from 'axios'
 
 export default {
     'images' : {
-        'all' : queryParams => axios.get('/images',{
+        'all' : queryParams => axios.get('/media-library/images',{
             params:queryParams
         }),
         'delete': (imageId) => axios.delete(
-            `/delete-media/${imageId}`
+            `/media-library/delete-media/${imageId}`
         ),
         'update': (imageId,information) => axios.put(
-            `/update-media/${imageId}`,{
+            `/media-library/update-media/${imageId}`,{
                 information
             }
         )

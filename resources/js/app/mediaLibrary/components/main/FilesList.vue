@@ -149,7 +149,7 @@
 </template>
 <script>
 import axios from "axios";
-import videoIcon from "../../../assets/images/video.png";
+import videoIcon from "../../../../../assets/images/video.png";
 
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import InfiniteLoading from "vue-infinite-loading";
@@ -168,19 +168,21 @@ export default {
   },
   computed: {
     ...mapGetters({
-      images: "images",
-      showedImage: "showedImage",
-      meta: "meta",
-      queryParams: "queryParams"
+      images: "mediaLibrary/images",
+      showedImage: "mediaLibrary/showedImage",
+      meta: "mediaLibrary/meta",
+      queryParams: "mediaLibrary/queryParams"
     })
   },
   methods: {
     ...mapActions({
-      getImages: "getImages",
-      deleteImage: "deleteImage"
+      getImages: "mediaLibrary/getImages",
+      deleteImage: "mediaLibrary/deleteImage"
     }),
     ...mapMutations({
-      updateMeta: "updateMeta"
+      updateMeta: "mediaLibrary/updateMeta",
+      showImageUpdate: "mediaLibrary/showImage",
+      updateImages: "mediaLibrary/updateImages"
     }),
     imageType(image) {
       return image.data.mime_type.includes("image");
@@ -189,7 +191,7 @@ export default {
       return image.data.mime_type.includes("video");
     },
     showImage(image) {
-      this.$store.commit("showImage", { image });
+      this.showImageUpdate({ image });
     },
     infiniteHandler($state) {
       if (this.meta.current_page <= this.meta.last_page) {
@@ -214,8 +216,8 @@ export default {
       }
     },
     resetDataForInfiniteLoading() {
-      this.$store.state.images = [];
-      this.$store.state.image = null;
+      this.updateImages();
+      this.showImageUpdate({ image: null });
       this.updateMeta({
         meta: {
           ...this.meta,
@@ -226,21 +228,18 @@ export default {
     },
     disableGrid() {
       this.grid = false;
-      this.$store.state.images = [];
+      this.updateImages();
     },
     activeGrid() {
       this.grid = true;
-      this.$store.state.images = [];
+      this.updateImages();
     },
     showChickboxes() {
-      console.log("asd");
-
       this.showChickbox = !this.showChickbox;
     },
     async deleteImg() {
       if (this.selected != null) {
         for (let image in this.selected) {
-          // console.log(this.selected[image])
           this.deleteImage({
             imageId: this.selected[image]
           });
@@ -253,8 +252,6 @@ export default {
     queryParams: {
       deep: true,
       handler(val) {
-        console.log("watch-queryParams");
-
         this.resetDataForInfiniteLoading();
       }
     }

@@ -1,15 +1,11 @@
 import Vue from 'vue'
-import Vuex from 'vuex';
+import Vuex from 'vuex'
+import store from '../app/store'
+
 Vue.use(Vuex)
 
-import state from './state';
-import * as getters from './getters'
-import * as mutations from './mutations'
-import * as actions from './actions'
-
 export default new Vuex.Store({
-    state,
-    mutations,
-    getters,
-    actions,
-  })
+    modules: {
+        mediaLibrary: store.MediaLibrary,
+    }
+})
