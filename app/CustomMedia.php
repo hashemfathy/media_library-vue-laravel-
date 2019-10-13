@@ -3,6 +3,7 @@
 namespace App;
 
 use Carbon\Carbon;
+use App\AttachedMedia;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\MediaLibrary\Models\Media as BaseMedia;
 
@@ -50,5 +51,10 @@ class CustomMedia extends BaseMedia
     public function scopeFilterDate(Builder $query, $value = null)
     {
         if ($value) $query->whereDate("created_at", Carbon::parse($value));
+    }
+
+    public function attachedMedia()
+    {
+        return $this->hasMany(AttachedMedia::class);
     }
 }

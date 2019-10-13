@@ -2,7 +2,7 @@
   <div class="container mt-2 mb-2">
     <form action>
       <div class="form-row">
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-2">
           <label for="name">Name</label>
           <input v-model="form.name" type="text" class="form-control" id="name" />
         </div>
@@ -27,6 +27,9 @@
           <select v-model="form.status" id="inputStatus" class="form-control">
             <option v-for="(state,index) in status" :key="index" :value="state">{{state}}</option>
           </select>
+        </div>
+        <div class="form-group col-md-2">
+          <b-button variant="warning" class="btnClear" @click="removeParams()">Clear</b-button>
         </div>
       </div>
     </form>
@@ -59,7 +62,14 @@ export default {
   methods: {
     ...mapMutations({
       updateQueryParams: "mediaLibrary/updateQueryParams"
-    })
+    }),
+    removeParams(){
+      this.form.name=null,
+      this.form.type= null,
+      this.form.uploaded_by= null,
+      this.form.date= null,
+      this.form.status= null
+    }
   },
   watch: {
     "form.name": _.debounce(function(newVal, oldVal) {
@@ -87,3 +97,10 @@ export default {
   }
 };
 </script>
+<style>
+.btnClear{
+  position: relative;
+    bottom: -31px;
+    width: 100%;
+}
+</style>
