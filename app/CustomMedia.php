@@ -52,9 +52,25 @@ class CustomMedia extends BaseMedia
     {
         if ($value) $query->whereDate("created_at", Carbon::parse($value));
     }
+    /**
+     * filterStatus function
+     *
+     * @param Builder $query
+     * @return void
+     */
+    public function scopeFilterStatus(Builder $query, $value = null)
+    {
+        if ($value){
+            if($value=='attached'){
+                $query->whereHas('attachedMedia');
+            }else{
+                $query->whereDoesntHave('attachedMedia');
+            }
+        }
+    }
 
     public function attachedMedia()
     {
-        return $this->hasMany(AttachedMedia::class);
+        return $this->hasMany(AttachedMedia::class,'attached_media_id');
     }
 }

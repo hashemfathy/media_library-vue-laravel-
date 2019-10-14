@@ -72,6 +72,7 @@ class MediaLibraryController extends Controller
         $all_media = CustomMedia::filterName($request->name)
             ->filterType($request->type)
             ->filterDate($request->date)
+            ->filterStatus($request->status)
             ->filterUploadedBy($request->uploaded_by)
             ->paginate(40);
         return mediaResource::collection($all_media);
