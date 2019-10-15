@@ -59,6 +59,34 @@
             ></b-form-textarea>
           </b-form-group>
         </b-form>
+
+        <hr />
+        <h2>Related By</h2>
+        <template v-for="(relation,index) in relations">
+          <div :key="index" v-if="relation.value.length">
+            <span
+              class="badge badge-primary"
+              @click="handleShowedRelatedValue(relation.name)"
+            >{{relation.name}}</span>
+
+            <table class="table" v-if="showedRelation && showedRelation == relation.name">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Name</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in relation.value" :key="item.id">
+                  <th scope="row">{{item.id}}</th>
+                  <td>{{item.name}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </template>
+
+        <hr />
         <b-button variant="danger" @click="deleteImg">Delete</b-button>
         <b-button variant="info" @click="downloadWithVueResource">Download</b-button>
       </div>
@@ -70,8 +98,23 @@ import _ from "lodash";
 import axios from "axios";
 import { mapGetters, mapActions } from "vuex";
 export default {
+  mounted() {
+    if (this.image) {
+      this.isLoaded = false;
+      this.form.title = this.image.data.name;
+
+      this.form.description = this.image.data.custom_properties.information
+        ? this.image.data.custom_properties.information.description
+        : null;
+      this.form.caption = his.image.data.custom_properties.information
+        ? this.image.data.custom_properties.information.caption
+        : null;
+    }
+  },
   data() {
     return {
+      isLoaded: true,
+      showedRelation: null,
       form: {
         title: null,
         description: null,
@@ -84,6 +127,13 @@ export default {
       deleteImage: "mediaLibrary/deleteImage",
       updateShowedImage: "mediaLibrary/updateShowedImage"
     }),
+    handleShowedRelatedValue(showedRelation) {
+      if (this.showedRelation || this.showedRelation == showedRelation) {
+        this.showedRelation = null;
+      } else {
+        this.showedRelation = showedRelation;
+      }
+    },
     deleteImg() {
       if (this.image) {
         this.deleteImage({
@@ -116,6 +166,18 @@ export default {
     ...mapGetters({
       image: "mediaLibrary/showedImage"
     }),
+    relations() {
+      const data = [];
+
+      return this.image
+        ? Object.keys(this.image.relations).map(key => {
+            return {
+              name: key,
+              value: this.image.relations[key]
+            };
+          })
+        : [];
+    },
     imageType() {
       return this.image.data.mime_type.includes("image");
     },
@@ -128,7 +190,7 @@ export default {
   },
   watch: {
     image(newVal) {
-      if (newVal) {
+      if (newVal && !this.isLoaded) {
         this.form.title = newVal.data.name ? newVal.data.name : null;
         this.form.description = newVal.data.custom_properties.information
           ? newVal.data.custom_properties.information.description

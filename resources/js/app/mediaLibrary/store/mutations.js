@@ -26,7 +26,7 @@ export const deleteImage = (state,{imageId}) => {
   }
 }
 
-export const updateShowedImage = (state,{imageId,newImage}) => { 
+export const updateShowedImage = (state,{imageId,newImage}) => {   
   const imageIndex = state.images.findIndex(image=>image.data.id === imageId)
   if (imageIndex !== -1) {
     const newImagesArray = [...state.images];

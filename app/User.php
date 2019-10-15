@@ -36,8 +36,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-    public function attachedmedias()
+
+
+    public function media()
     {
-        return $this->morphToMany('App\AttachedMedia', 'attachedmediable');
+        return $this->morphToMany(CustomMedia::class, 'attachedmediable', 'attachedmediables', 'attachedmediable_id', 'attached_media_id');
     }
 }

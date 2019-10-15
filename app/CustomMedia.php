@@ -10,6 +10,15 @@ use Spatie\MediaLibrary\Models\Media as BaseMedia;
 class CustomMedia extends BaseMedia
 {
     protected $table = 'media';
+
+    /**
+     * Get all of the user that are assigned this media.
+     */
+    public function users()
+    {
+        return $this->morphedByMany(User::class, 'attachedmediable', 'attachedmediables', 'attached_media_id', 'id');
+    }
+
     /**
      * filterName function
      * 
@@ -31,6 +40,7 @@ class CustomMedia extends BaseMedia
     {
         if ($value) $query->where("mime_type", "LIKE", "%{$value}%");
     }
+
     /**
      * filterUploadedBy function
      *
@@ -52,6 +62,7 @@ class CustomMedia extends BaseMedia
     {
         if ($value) $query->whereDate("created_at", Carbon::parse($value));
     }
+
     /**
      * filterStatus function
      *
@@ -60,17 +71,12 @@ class CustomMedia extends BaseMedia
      */
     public function scopeFilterStatus(Builder $query, $value = null)
     {
-        if ($value){
-            if($value=='attached'){
+        if ($value) {
+            if ($value == 'attached') {
                 $query->whereHas('attachedMedia');
-            }else{
+            } else {
                 $query->whereDoesntHave('attachedMedia');
             }
         }
-    }
-
-    public function attachedMedia()
-    {
-        return $this->hasMany(AttachedMedia::class,'attached_media_id');
     }
 }

@@ -6,7 +6,6 @@ use App\CustomMedia;
 use App\DataMedia;
 use App\Http\Resources\MediaResource;
 use Illuminate\Http\Request;
-use Spatie\MediaLibrary\Models\Media;
 
 class MediaLibraryController extends Controller
 {
@@ -30,16 +29,13 @@ class MediaLibraryController extends Controller
                 ->withCustomProperties(['user' => request()->user()])
                 ->toMediaCollection();
         }
-        $media_data = [
-            'url' => $media->getMedia()[count($media->getMedia()) - 1]->getFullUrl(),
-            'data' => $media->getMedia()[count($media->getMedia()) - 1]
-        ];
+
         return response()->json([
-            'media' => $media_data
+            'media' => new MediaResource($media->getMedia()->last())
         ], 200);
     }
 
-    public function delete(Request $request, Media $media)
+    public function delete(Request $request, CustomMedia $media)
     {
         $media->delete();
         return response()->json([
@@ -47,7 +43,7 @@ class MediaLibraryController extends Controller
         ], 200);
     }
 
-    public function update(Request $request, Media $media)
+    public function update(Request $request, CustomMedia $media)
     {
         $data = [
             'user' => $media->custom_properties['user'] ?? null,
@@ -74,6 +70,7 @@ class MediaLibraryController extends Controller
             ->filterDate($request->date)
             ->filterStatus($request->status)
             ->filterUploadedBy($request->uploaded_by)
+            ->with('users')
             ->paginate(40);
         return mediaResource::collection($all_media);
     }

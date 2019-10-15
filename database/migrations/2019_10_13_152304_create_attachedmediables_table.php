@@ -17,7 +17,9 @@ class CreateAttachedmediablesTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('attachedmediable_id');
             $table->string('attachedmediable_type');
+
             $table->unsignedBigInteger('attached_media_id');
+            $table->foreign('attached_media_id')->references('id')->on('media')->onDelete('cascade');
             $table->timestamps();
         });
     }

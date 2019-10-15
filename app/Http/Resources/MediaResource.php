@@ -14,6 +14,7 @@ class MediaResource extends JsonResource
      */
     public function toArray($request)
     {
+        // dd($this->whenLoaded('attachedMedia')[0]['attachedmediable_type']);
         return [
             'url' => $this->getFullUrl(),
             'data' => [
@@ -27,7 +28,10 @@ class MediaResource extends JsonResource
                 'size' => $this->size,
                 'custom_properties' => $this->custom_properties,
                 'created_at' => $this->created_at,
-                'order_column' => $this->order_column
+                'order_column' => $this->order_column,
+            ],
+            'relations' => [
+                'users' => $this->whenLoaded('users'),
             ]
         ];
     }
